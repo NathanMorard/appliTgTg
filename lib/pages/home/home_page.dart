@@ -1,4 +1,3 @@
-// import 'package:appli_tgtg/main.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -26,8 +25,8 @@ class HomePageState extends State<HomePage> {
     );
 
     final response = await http.post(
-      // Uri.parse('${globals.baseUrl}connect_tgtg'),
-      Uri.parse('http://127.0.0.1:5000/api/connect_tgtg'),
+      Uri.parse('${globals.baseUrl}/connect_tgtg'),
+      // Uri.parse('/connect_tgtg'),
       headers: {"Content-Type": "application/json"},
       body: json.encode({"mail": clientId}),
     );
@@ -39,15 +38,19 @@ class HomePageState extends State<HomePage> {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       if (rememberMe) {
-        globals.savedClientId = data;
+        globals.savedClientId = jsonEncode(data);
+        // globals.savedClientId = data;
       }
-      print(globals.savedClientId);
+      print({'global variable' :globals.savedClientId});
       if (rememberMe) {
         globals.savedClientId = clientId;
       }
       setState(() {
         isConnected = true;
       });
+      if (mounted) {
+      Navigator.pushReplacementNamed(context, '/find'); 
+    }
     } else {
       print('Erreur : ${response.statusCode}');
     }
@@ -122,4 +125,3 @@ class HomePageState extends State<HomePage> {
     );
   }
 }
-//test
