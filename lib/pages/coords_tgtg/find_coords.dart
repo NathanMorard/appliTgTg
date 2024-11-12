@@ -18,11 +18,11 @@ class FindTgTgState extends State<FindTgTg> {
   void initState() {
     super.initState();
 
-    if (globals.savedClientId.isEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacementNamed(context, '/');
-      });
-    }
+    // if (globals.savedClientId.isEmpty) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     Navigator.pushReplacementNamed(context, '/');
+    //   });
+    // }
   }
 
   void _findCoords() {
@@ -44,15 +44,58 @@ class FindTgTgState extends State<FindTgTg> {
         headers: {"Content-Type": "application/json"},
         body: json.encode({"adr": adr}),
       );
-
+      final responseData = json.decode(response.body);
+      
       if (response.statusCode == 200) {
-        print('Réponse reçue : ${response.body}');
+        RegExp regex = RegExp(r'"coordonates": "([^"]+)"');
+        Match? match = regex.firstMatch(response.body);
+
+        if (match != null) {
+          String coordinates = match.group(1)!; 
+          globals.coordonates = coordinates;
+        } else {
+          print("Coordonnées non trouvées");
+        }
+        _showSuccessMessage('Coordonnées trouvées avec succès !');
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/list'); 
+        }
       } else {
-        print('Erreur : ${response.statusCode} - ${response.body}');
+        final errorMessage = responseData['message'] ?? 'Une erreur est survenue';
+        _showErrorMessage(errorMessage);
       }
     } catch (e) {
-      print('Erreur lors de la requête HTTP : $e');
+      _showErrorMessage('Erreur de connexion au serveur');
     }
+  }
+
+  // messages de succès
+  void _showSuccessMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 10),
+      ),
+    );
+  }
+
+  // messages d'erreur
+  void _showErrorMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: Colors.white,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
   }
 
   @override

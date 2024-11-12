@@ -37,14 +37,15 @@ class HomePageState extends State<HomePage> {
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
-      if (rememberMe) {
+      // if (rememberMe) {
         globals.savedClientId = jsonEncode(data);
-        // globals.savedClientId = data;
-      }
+      // }
+
+      // globals.savedClientId = data;
       print({'global variable' :globals.savedClientId});
-      if (rememberMe) {
-        globals.savedClientId = clientId;
-      }
+      // if (rememberMe) {
+      //   globals.savedClientId = clientId;
+      // }
       setState(() {
         isConnected = true;
       });

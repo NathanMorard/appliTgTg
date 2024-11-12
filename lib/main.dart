@@ -3,7 +3,8 @@ import 'global_variable.dart' as globals;
 
 // Importation des différentes pages
 import 'pages/Home/home_page.dart';
-import 'pages/tgtg/find_tgtg.dart';
+import 'pages/coords_tgtg/find_coords.dart';
+import 'pages/list_TgTg/list_tg_tg.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,7 +13,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    String initialRoute = globals.savedClientId.isEmpty ? '/' : '/find';
+  String initialRoute = globals.savedClientId == '' ? '/' : '/find';
 
     return MaterialApp(
       title: 'TgTg Notifier',
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => HomePage(),
         '/find': (context) => FindTgTg(),
+        '/list': (context) => ListTgTg(),
       },
     );
   }
