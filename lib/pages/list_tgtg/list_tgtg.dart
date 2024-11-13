@@ -86,38 +86,40 @@ class ListgTgState extends State<ListTgTg> {
   }
 
   Future<void> notifierTgTg(List<String> idStore) async {
+    showDialog(
+      context: context,
+      barrierDismissible: true, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Recherche des paniers en cours...')
+            ],
+          ),
+        );
+      },
+    );
+
     try {
-      final response = await http.post(
+      http.post(
         Uri.parse('${globals.baseUrl}/notifier'),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
-          "idStore": idStore,  // On envoie la liste des IDs sélectionnés
+          "idStore": idStore,
           "id": globals.savedClientId,
         }),
       );
 
-      if (response.statusCode == 200) {
-        _showSuccessMessage('Notification envoyée avec succès');
-      } else {
-        _showErrorMessage('Erreur lors de l\'envoi de la notification');
-      }
+      
     } catch (e) {
       print('FLUTTER_LOG_ERROR: Erreur lors de la notification : $e');
+      Navigator.of(context).pop();
       _showErrorMessage('Erreur de connexion au serveur');
     }
   }
-
-// Message de succès
-void _showSuccessMessage(String message) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(message),
-      backgroundColor: Colors.green,
-      duration: Duration(seconds: 3),
-    ),
-  );
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -163,8 +165,13 @@ void _showSuccessMessage(String message) {
         .map((entry) => entry.key)
         .toList();
 
+    if (selectedIds.isEmpty) {
+      _showErrorMessage('Veuillez sélectionner au moins un magasin');
+      return;
+    }
+
     notifierTgTg(selectedIds);
-  }
+}
 
 
 }

@@ -4,7 +4,7 @@ import 'global_variable.dart' as globals;
 // Importation des différentes pages
 import 'pages/Home/home_page.dart';
 import 'pages/coords_tgtg/find_coords.dart';
-import 'pages/list_TgTg/list_tg_tg.dart';
+import 'pages/list_TgTg/list_tgtg.dart';
 
 void main() {
   runApp(MyApp());

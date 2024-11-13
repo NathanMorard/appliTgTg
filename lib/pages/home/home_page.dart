@@ -42,7 +42,7 @@ class HomePageState extends State<HomePage> {
       // }
 
       // globals.savedClientId = data;
-      print({'global variable' :globals.savedClientId});
+      // print({'global variable' :globals.savedClientId});
       // if (rememberMe) {
       //   globals.savedClientId = clientId;
       // }
